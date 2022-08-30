@@ -5,9 +5,10 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="./src/input.css" rel="stylesheet" />
-    <title>Vite + TS</title>
+    <script src="./src/main.ts" type="module" defer></script>
+    <title>CELLDODGER</title>
   </head>
-  <body class="text-white">
+  <body>
     <!-- whole screen -->
     <div id="main" class="flex w-screen h-screen">
       <!-- left column that contains settings -->
@@ -24,7 +25,7 @@
               <div class="flex w-full justify-between">
                 <label class="w-[160px]">No. Enemies</label>
                 <input
-                  id="noEmeies"
+                  id="noEnemies"
                   class="bg-slate-400 text-right"
                   type="number"
                   placeholder="5"
@@ -62,11 +63,30 @@
         </div>
       </div>
       <!-- center column that contains the grid -->
-      <div id="center" class="flex w-full h-full bg-blue-500">
-        <div
-          id="grid-container"
-          class="flex m-auto align-items-center w-[600px] h-[600px] bg-white"
-        ></div>
+      <div id="center" class="flex flex-col w-full h-full bg-blue-500">
+        <div class="my-auto">
+          <div id="ui-top" class="flex w-full bg-blue-900 justify-between">
+            <h1 class="italic font-bold text-2xl w-1/2">CELL DODGER</h1>
+            <div class="flex justify-end w-1/2 gap-2">
+              <img id="settings-icon" src="./public/settings.svg" />
+              <img id="help-icons" src="./public/help.svg" />
+            </div>
+          </div>
+          <div
+            id="grid-container"
+            class="flex align-items-center w-[600px] h-[600px] bg-white"
+          ></div>
+          <div id="ui-bottom" class="flex w-full bg-blue-900 justify-between">
+            <p class="italic font-bold text-xl w-1/2">
+              SCORE: <span id="score">0</span>
+            </p>
+            <div class="flex justify-end w-1/2 gap-2">
+              <p class="italic font-bold text-xl w-1/2 text-right">
+                LIVES: <span id="lives">3</span>
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
       <!-- right column which contains the instructions -->
       <div id="instructions" class="flex w-full h-full bg-green-500">
