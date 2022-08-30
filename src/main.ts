@@ -87,10 +87,11 @@ function randomInt(max: number) {
 
 // Start Functions
 function generateGrid(rows: number, columns: number) {
-  grid.classList.add(
-    `grid-cols-[repeat(${columns},1fr)]`,
-    `grid-cols-[repeat(${rows},1fr)]`
-  );
+  // programattically add column size to grid container
+  // currently not working
+
+  // grid.classList.add(`grid-cols-[repeat(${columns},1fr)]`);
+  // grid.classList.add(`grid-rows-[repeat(${rows},1fr)]`);
 
   for (let column = 0; column < columns; column++) {
     for (let row = 0; row < rows; row++) {
