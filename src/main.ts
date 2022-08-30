@@ -208,12 +208,12 @@ function startGame() {
 function collisionDetected(players: Player[], coins: Coin[]) {
   if (
     coins.some(({ x, y }) => {
-      return players[0].x == x && players[0].y === y;
+      return players[0].x === x && players[0].y === y;
     })
   ) {
     gameParams.score++;
     colorEntity(coins, colors.coinColor);
-    coins = [];
+    coins.pop();
     generatePosition(
       gameParams.rows,
       gameParams.columns,
