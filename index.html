@@ -7,11 +7,91 @@
     <link href="./src/input.css" rel="stylesheet" />
     <title>Vite + TS</title>
   </head>
-  <body>
-    <div id="app">
-      <p class="bg-red-500 text-4xl text-white">
-        dean you didnt put anything in the p tag
-      </p>
+  <body class="text-white">
+    <!-- whole screen -->
+    <div id="main" class="flex w-screen h-screen">
+      <!-- left column that contains settings -->
+      <div id="settings" class="flex w-full h-full bg-red-500">
+        <div
+          id="settings-box"
+          class="flex m-auto align-items-center w-[300px] h-[300px] bg-white"
+        >
+          <div class="flex flex-col bg-slate-400 w-full items-center px-4 py-2">
+            <h2 class="italic font-bold text-2xl">SETTINGS</h2>
+            <div class="flex w-full justify-center">
+              <label>No. Enemies</label>
+              <input
+                id="noEmeies"
+                class="bg-slate-400 text-right"
+                type="number"
+                placeholder="5"
+                value="5"
+                min="1"
+                max="12"
+              />
+            </div>
+            <div class="flex w-full justify-center">
+              <label>No. Coins</label>
+              <input
+                id="noCoins"
+                class="bg-slate-400 text-right"
+                type="number"
+                placeholder="1"
+                value="1"
+                min="1"
+                max="4"
+              />
+            </div>
+            <div class="flex w-full justify-center">
+              <label>Game Speed</label>
+              <input
+                id="gameSpeed"
+                class="bg-slate-400 text-right"
+                type="number"
+                placeholder="300"
+                value="300"
+                min="100"
+                max="600"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- center column that contains the grid -->
+      <div id="center" class="flex w-full h-full bg-blue-500">
+        <div
+          id="grid-container"
+          class="flex m-auto align-items-center w-[600px] h-[600px] bg-white"
+        ></div>
+      </div>
+      <!-- right column which contains the instructions -->
+      <div id="instructions" class="flex w-full h-full bg-green-500">
+        <div
+          id="instructions-box"
+          class="flex m-auto align-items-center w-[300px] h-[300px] bg-white"
+        >
+          <div
+            class="flex flex-col bg-slate-400 w-full items-center px-4 py-2 gap-4"
+          >
+            <h2 class="italic font-bold text-2xl">INSTRUCTIONS</h2>
+            <div class="flex w-full justify-center gap-4">
+              <img class="w-[60px]" src="./public/controls.svg" />
+              <p class="leading-tight">
+                Use the arrow keys to move the player and collect points while
+                avoiding the enemies.
+              </p>
+            </div>
+            <div class="flex w-full justify-center gap-4">
+              <img class="w-[60px]" src="./public/loop.svg" />
+              <p class="leading-tight">
+                The player can go off the grid and return on the other side. So
+                can the enemies.
+              </p>
+            </div>
+            <div class="flex w-full justify-center"></div>
+          </div>
+        </div>
+      </div>
     </div>
   </body>
 </html>
