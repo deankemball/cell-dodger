@@ -16,43 +16,47 @@
           id="settings-box"
           class="flex m-auto align-items-center w-[300px] h-[300px] bg-white"
         >
-          <div class="flex flex-col bg-slate-400 w-full items-center px-4 py-2">
+          <div
+            class="flex flex-col bg-slate-400 w-full items-center px-4 py-2 gap-2"
+          >
             <h2 class="italic font-bold text-2xl">SETTINGS</h2>
-            <div class="flex w-full justify-center">
-              <label>No. Enemies</label>
-              <input
-                id="noEmeies"
-                class="bg-slate-400 text-right"
-                type="number"
-                placeholder="5"
-                value="5"
-                min="1"
-                max="12"
-              />
-            </div>
-            <div class="flex w-full justify-center">
-              <label>No. Coins</label>
-              <input
-                id="noCoins"
-                class="bg-slate-400 text-right"
-                type="number"
-                placeholder="1"
-                value="1"
-                min="1"
-                max="4"
-              />
-            </div>
-            <div class="flex w-full justify-center">
-              <label>Game Speed</label>
-              <input
-                id="gameSpeed"
-                class="bg-slate-400 text-right"
-                type="number"
-                placeholder="300"
-                value="300"
-                min="100"
-                max="600"
-              />
+            <div class="flex flex-col">
+              <div class="flex w-full justify-between">
+                <label class="w-[160px]">No. Enemies</label>
+                <input
+                  id="noEmeies"
+                  class="bg-slate-400 text-right"
+                  type="number"
+                  placeholder="5"
+                  value="5"
+                  min="1"
+                  max="12"
+                />
+              </div>
+              <div class="flex w-full justify-between">
+                <label class="w-[160px] self-start">No. Coins</label>
+                <input
+                  id="noCoins"
+                  class="bg-slate-400 text-right"
+                  type="number"
+                  placeholder="1"
+                  value="1"
+                  min="1"
+                  max="4"
+                />
+              </div>
+              <div class="flex w-full justify-between">
+                <label class="w-[160px] self-start">Game Speed</label>
+                <input
+                  id="gameSpeed"
+                  class="bg-slate-400 text-right"
+                  type="number"
+                  placeholder="300"
+                  value="300"
+                  min="100"
+                  max="600"
+                />
+              </div>
             </div>
           </div>
         </div>
