@@ -212,6 +212,7 @@ function collisionDetected(players: Player[], coins: Coin[]) {
     })
   ) {
     gameParams.score++;
+    scoreDisplay.innerHTML = gameParams.score.toString();
     colorEntity(coins, colors.coinColor);
     coins.pop();
     generatePosition(
