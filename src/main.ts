@@ -61,7 +61,7 @@ const colors: Colors = {
 let defaultGameParams: GameParams = {
   noPlayers: 1,
   noEnemies: 10,
-  noCoins: 2,
+  noCoins: 1,
   gameSpeed: 300,
   rows: 20,
   columns: 20,
@@ -166,7 +166,7 @@ function colorEntity<T extends Entity>(entities: T[], color: string) {
     const entityCell = document.getElementById(
       `xy_${entity.x}-${entity.y}`
     ) as HTMLElement;
-    entityCell.classList.add(color);
+    entityCell.classList.toggle(color);
   });
 }
 
@@ -201,8 +201,85 @@ function startGame() {
   colorEntity(players, colors.playerColor);
   colorEntity(coins, colors.coinColor);
   colorEntity(enemies, colors.enemyColor);
+
+  console.log("coins", coins, "players", players);
 }
 
+function collisionDetected(players: Player[], coins: Coin[]) {
+  if (
+    coins.some(({ x, y }) => {
+      return players[0].x == x && players[0].y === y;
+    })
+  ) {
+    gameParams.score++;
+    colorEntity(coins, colors.coinColor);
+    coins = [];
+    generatePosition(
+      gameParams.rows,
+      gameParams.columns,
+      coins,
+      gameParams.noCoins
+    );
+    colorEntity(coins, colors.coinColor);
+  }
+}
+
+// function collisionDetected(players: Player[], coins: Coin[]) {
+//   if (coins.includes(players[0])) {
+//     console.log("point scored");
+//   }
+// }
+
+// function movePlayer(players: Player[]) {
+document.addEventListener("keydown", (event) => {
+  switch (event.key) {
+    case playerInputs.left:
+      if (players[0].x === 0) {
+        collisionDetected(players, coins);
+        break;
+      } else {
+        colorEntity([players[0]], colors.playerColor);
+        players[0].x -= 1;
+        collisionDetected(players, coins);
+        console.log(players[0], "coins", coins);
+        colorEntity([players[0]], colors.playerColor);
+      }
+      break;
+    case playerInputs.up:
+      if (players[0].y === 0) {
+        collisionDetected(players, coins);
+        break;
+      } else {
+        colorEntity([players[0]], colors.playerColor);
+        players[0].y -= 1;
+        collisionDetected(players, coins);
+        colorEntity([players[0]], colors.playerColor);
+        break;
+      }
+    case playerInputs.right:
+      if (players[0].x === gameParams.columns - 1) {
+        collisionDetected(players, coins);
+        break;
+      } else {
+        colorEntity([players[0]], colors.playerColor);
+        players[0].x += 1;
+        collisionDetected(players, coins);
+        colorEntity([players[0]], colors.playerColor);
+      }
+      break;
+    case playerInputs.down:
+      if (players[0].y === gameParams.rows - 1) {
+        collisionDetected(players, coins);
+        break;
+      } else {
+        colorEntity([players[0]], colors.playerColor);
+        players[0].y += 1; // x = x - 1
+        collisionDetected(players, coins);
+        colorEntity([players[0]], colors.playerColor);
+        break;
+      }
+  }
+});
 // if (gameParams.gameStarted) {
 //   startGame();
 // }
