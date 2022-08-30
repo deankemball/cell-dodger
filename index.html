@@ -23,6 +23,18 @@
             <h2 class="italic font-bold text-2xl">SETTINGS</h2>
             <div class="flex flex-col">
               <div class="flex w-full justify-between">
+                <label class="w-[160px]">No. Lives</label>
+                <input
+                  id="noLives"
+                  class="bg-slate-400 text-right"
+                  type="number"
+                  placeholder="3"
+                  value="3"
+                  min="1"
+                  max="6"
+                />
+              </div>
+              <div class="flex w-full justify-between">
                 <label class="w-[160px]">No. Enemies</label>
                 <input
                   id="noEnemies"
@@ -74,7 +86,7 @@
           </div>
           <div
             id="grid-container"
-            class="flex align-items-center w-[600px] h-[600px] bg-white"
+            class="grid align-items-center w-[600px] h-[600px] bg-white"
           ></div>
           <div id="ui-bottom" class="flex w-full bg-blue-900 justify-between">
             <p class="italic font-bold text-xl w-1/2">
