@@ -8,6 +8,7 @@ interface Colors {
   gridColor: string;
 }
 interface GameParams {
+  noPlayers: number;
   noEnemies: number;
   noCoins: number;
   gameSpeed: number;
@@ -51,6 +52,7 @@ const colors: Colors = {
 };
 
 let defaultGameParams: GameParams = {
+  noPlayers: 1,
   noEnemies: 5,
   noCoins: 1,
   gameSpeed: 300,
@@ -97,7 +99,7 @@ function generateGrid(rows: number, columns: number) {
     for (let row = 0; row < rows; row++) {
       const gridCell = document.createElement("div");
       gridCell.id = `xy_${row}-${column}`;
-      gridCell.classList.add(colors.gridColor, "border-2", "border-black");
+      gridCell.classList.add("border-2", "border-black");
       grid.appendChild(gridCell);
     }
   }
@@ -106,12 +108,17 @@ function generateGrid(rows: number, columns: number) {
 function generatePosition<T extends Entity>(
   rows: number,
   columns: number,
-  entities: T[]
+  entities: T[],
+  noEntities: number
 ) {
-  // return player position in the form of "xy_[row]-[col]"
-  let x = randomInt(rows);
-  let y = randomInt(columns);
-  return `xy_${x}-${y}`;
+  while (entities.length < noEntities) {
+    let x, y;
+    x = randomInt(rows);
+    y = randomInt(columns);
+    let entity = { x, y } as T;
+    entities.push(entity);
+  }
+  return entities;
 }
 
 function colorEntity<T extends Entity>(entities: T[], color: string) {
@@ -125,7 +132,12 @@ function colorEntity<T extends Entity>(entities: T[], color: string) {
 
 // Initialize
 generateGrid(gameParams.rows, gameParams.columns);
-generatePosition(gameParams.rows, gameParams.columns, players);
+generatePosition(
+  gameParams.rows,
+  gameParams.columns,
+  players,
+  gameParams.noPlayers
+);
 console.log(players);
 colorEntity(players, colors.playerColor);
 
