@@ -125,6 +125,7 @@ function colorEntity<T extends Entity>(entities: T[], color: string) {
 // Initialize
 generateGrid(gameParams.rows, gameParams.columns);
 generatePosition(gameParams.rows, gameParams.columns, players);
+console.log(players);
 colorEntity(players, colors.playerColor);
 
 export {};
