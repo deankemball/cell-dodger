@@ -309,7 +309,9 @@ function movePlayer(player: Player) {
 }
 
 initGame();
-document.addEventListener("keydown", startGame);
+document.addEventListener("keydown", () => {
+  if (!gameParams.gameStarted) startGame();
+});
 
 // Update functions
 function minusLife() {
@@ -386,52 +388,31 @@ function minusLife() {
 }
 
 function moveEnemies(enemies: Enemy[], player: Player) {
+  colorEntity(enemies, colors.enemyColor);
   for (const enemy of enemies) {
     const [dx, dy] = [player.x - enemy.x, player.y - enemy.y];
-    // if (Math.round(Math.random()) >= 0.5) {
-    //   continue;
-    // }
-    if ((dx == 1 && dy == 0) || (dx == 0 && dy == 1)) {
-      minusLife();
+    if (Math.round(Math.random()) >= 0.5) continue;
+    if ((dx === 0 && Math.abs(dy) === 1) || (dy === 0 && Math.abs(dx) === 1))
       continue;
-    } else if (Math.abs(dy) >= Math.abs(dx)) {
-      const nextMove = mod(
-        enemy.y + Math.sign(dy) * 1 * Math.round(Math.random()),
-        gameParams.rows
-      );
-      if (
-        enemies
-          .filter((enemy) => enemy.id !== enemy.id)
-          .some(({ x, y }: Enemy) => {
-            return enemy.x === x && enemy.y === y;
-          })
-      ) {
-        continue;
-      } else {
-        colorEntity([enemy], colors.enemyColor);
-        enemy.y = nextMove;
-        colorEntity([enemy], colors.enemyColor);
-      }
+    if (Math.abs(dy) >= Math.abs(dx)) {
+      enemy.y = mod(enemy.y + Math.sign(dy) * 1, gameParams.rows);
     } else if (Math.abs(dx) >= Math.abs(dy)) {
-      const nextMove = mod(
-        enemy.x + Math.sign(dx) * 1 * Math.round(Math.random()),
-        gameParams.columns
-      );
-      if (
-        enemies
-          .filter((enemy) => enemy.id !== enemy.id)
-          .some(({ x, y }: Enemy) => {
-            return enemy.x === x && enemy.y === y;
-          })
-      ) {
-        continue;
-      } else {
-        colorEntity([enemy], colors.enemyColor);
-        enemy.y = nextMove;
-        colorEntity([enemy], colors.enemyColor);
-      }
+      enemy.x = mod(enemy.x + Math.sign(dx) * 1, gameParams.columns);
     }
   }
+  if (
+    enemies.some(({ x, y }) => {
+      return (
+        (player.x === x && player.y === y + 1) ||
+        (player.x === x && player.y === y - 1) ||
+        (player.y === y && player.x === x - 1) ||
+        (player.y === y && player.x === x - 1)
+      );
+    })
+  ) {
+    minusLife();
+  }
+  colorEntity(enemies, colors.enemyColor);
 }
 
 function updateGameState() {
