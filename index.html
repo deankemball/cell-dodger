@@ -15,7 +15,7 @@
       <div id="settings" class="flex w-full h-full">
         <div
           id="settings-box"
-          class="flex m-auto align-items-center w-[300px] h-[300px]"
+          class="flex m-auto align-items-center w-[300px] h-[300px] opacity-0"
         >
           <div class="flex flex-col w-full items-center px-4 py-2 gap-2">
             <h2 class="italic font-bold text-2xl">SETTINGS</h2>
@@ -78,8 +78,12 @@
           <div id="ui-top" class="flex w-full justify-between">
             <h1 class="italic font-bold text-3xl w-1/2">CELL DODGER</h1>
             <div class="flex justify-end w-1/2 gap-2 p-2">
-              <img id="settings-icon" src="./settings.svg" />
-              <img id="help-icons" src="./help.svg" />
+              <img
+                id="settings-icon"
+                src="./settings.svg"
+                class="cursor-pointer"
+              />
+              <img id="help-icon" src="./help.svg" class="cursor-pointer" />
             </div>
           </div>
           <div
@@ -102,7 +106,7 @@
       <div id="instructions" class="flex w-full h-full">
         <div
           id="instructions-box"
-          class="flex m-auto align-items-center w-[300px] h-[300px]"
+          class="flex m-auto align-items-center w-[300px] h-[300px opacity-0"
         >
           <div class="flex flex-col w-full items-center px-4 py-2 gap-4">
             <h2 class="italic font-bold text-2xl">INSTRUCTIONS</h2>

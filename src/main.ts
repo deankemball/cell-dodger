@@ -1,7 +1,7 @@
 import { cloneDeep } from "lodash";
 
 // Define Types
-interface Colors {
+interface StylesObj {
   bgColor: string;
   textColor: string;
   playerColor: string;
@@ -10,7 +10,9 @@ interface Colors {
   gridColor: string;
   borderColor: string;
   borderSize: string;
-  gameOverColor: string;
+  gameOverTextColor: string;
+  gridBorderSize: string;
+  gridBorderColor: string;
 }
 interface GameParams {
   noPlayers: number;
@@ -52,7 +54,7 @@ interface PlayerInputs {
 }
 
 // Define Default Values
-const colors: Colors = {
+const stylesObj: StylesObj = {
   bgColor: "bg-bgColor",
   textColor: "text-textColor",
   playerColor: "bg-playerColor",
@@ -61,7 +63,9 @@ const colors: Colors = {
   gridColor: "bg-gridColor",
   borderColor: "border-black/25",
   borderSize: "border-[1px]",
-  gameOverColor: "text-playerColor",
+  gameOverTextColor: "text-playerColor",
+  gridBorderSize: "border-2",
+  gridBorderColor: "border-playerColor",
 };
 
 const defaultGameParams: GameParams = {
@@ -96,25 +100,66 @@ const noLivesInput = document.querySelector("#noLives") as HTMLInputElement;
 const noEnemiesInput = document.querySelector("#noEnemies") as HTMLInputElement;
 const noCoinsInput = document.querySelector("#noCoins") as HTMLInputElement;
 const gameSpeedInput = document.querySelector("#gameSpeed") as HTMLInputElement;
-const settingsButton = document.querySelector("#settings-icon") as HTMLElement;
-const helpButton = document.querySelector("#help-icon") as HTMLElement;
+const settingsButton = document.querySelector(
+  "#settings-icon"
+) as HTMLImageElement;
+const helpButton = document.querySelector("#help-icon") as HTMLImageElement;
 const scoreDisplay = document.querySelector("#score") as HTMLElement;
 const livesDisplay = document.querySelector("#lives") as HTMLElement;
 
+function toggleIcons(icon: HTMLImageElement, iconName: string) {
+  if (!icon.src.includes("filled")) {
+    icon.src = `./${iconName}-filled.svg`;
+  } else {
+    icon.src = `/${iconName}.svg`;
+  }
+}
+settingsButton.addEventListener("click", () => {
+  toggleIcons(settingsButton, "settings");
+  settings.classList.toggle("opacity-0");
+});
+helpButton.addEventListener("click", () => {
+  toggleIcons(helpButton, "help");
+  instructions.classList.toggle("opacity-0");
+});
+
+// function updateInput(element: HTMLInputElement, gameParam: keyof GameParams) {
+//   element.addEventListener("input", () => {
+//     gameParams[gameParam] = Number(element.value);
+//     console.log(gameParams[gameParam]);
+//     initGame();
+//   });
+// }
+
+// updateInput(noLivesInput, "noLives");
+// updateInput(noEnemiesInput, "noEnemies");
+// updateInput(gameSpeedInput, "gameSpeed");
+// updateInput(noCoinsInput, "noCoins");
+
 // style default elements
-body.classList.add(colors.bgColor, colors.textColor);
-grid.classList.add(colors.gridColor, colors.borderColor, colors.borderSize);
-settings.classList.add(colors.gridColor, colors.borderColor, colors.borderSize);
-instructions.classList.add(
-  colors.gridColor,
-  colors.borderColor,
-  colors.borderSize
+body.classList.add(stylesObj.bgColor, stylesObj.textColor);
+grid.classList.add(
+  stylesObj.gridColor,
+  stylesObj.borderColor,
+  stylesObj.borderSize
 );
-noLivesInput.classList.add(colors.gridColor);
-noEnemiesInput.classList.add(colors.gridColor);
-noCoinsInput.classList.add(colors.gridColor);
-instructions.classList.add(colors.gridColor);
-gameSpeedInput.classList.add(colors.gridColor);
+settings.classList.add(
+  stylesObj.gridColor,
+  stylesObj.borderColor,
+  stylesObj.borderSize,
+  "transition-opacity"
+);
+instructions.classList.add(
+  stylesObj.gridColor,
+  stylesObj.borderColor,
+  stylesObj.borderSize,
+  "transition-opacity"
+);
+noLivesInput.classList.add(stylesObj.gridColor);
+noEnemiesInput.classList.add(stylesObj.gridColor);
+noCoinsInput.classList.add(stylesObj.gridColor);
+instructions.classList.add(stylesObj.gridColor);
+gameSpeedInput.classList.add(stylesObj.gridColor);
 
 // Utility Functions
 function randomInt(max: number) {
@@ -224,9 +269,9 @@ function initGame() {
     gameParams.noEnemies
   );
 
-  colorEntity(players, colors.playerColor);
-  colorEntity(coins, colors.coinColor);
-  colorEntity(enemies, colors.enemyColor);
+  colorEntity(players, stylesObj.playerColor);
+  colorEntity(coins, stylesObj.coinColor);
+  colorEntity(enemies, stylesObj.enemyColor);
 
   console.log("coins", coins, "players", players);
 }
@@ -243,7 +288,7 @@ function playerCoinCollision(players: Player[], coins: Coin[]) {
   ) {
     gameParams.score++;
     scoreDisplay.innerHTML = gameParams.score.toString();
-    colorEntity(coins, colors.coinColor);
+    colorEntity(coins, stylesObj.coinColor);
     coins.pop();
     generatePosition(
       gameParams.rows,
@@ -251,7 +296,7 @@ function playerCoinCollision(players: Player[], coins: Coin[]) {
       coins,
       gameParams.noCoins
     );
-    colorEntity(coins, colors.coinColor);
+    colorEntity(coins, stylesObj.coinColor);
   }
 }
 
@@ -276,34 +321,34 @@ document.addEventListener("keydown", (event) => {
 function movePlayer(player: Player) {
   if (player.lastKeyPressed === playerInputs.left) {
     if (players[0].x === 0) return;
-    colorEntity([players[0]], colors.playerColor);
+    colorEntity([players[0]], stylesObj.playerColor);
     player.x -= 1;
     playerCoinCollision(players, coins);
-    colorEntity([players[0]], colors.playerColor);
+    colorEntity([players[0]], stylesObj.playerColor);
     player.lastKeyPressed = "";
   }
   if (player.lastKeyPressed === playerInputs.up) {
     if (players[0].y === 0) return;
-    colorEntity([players[0]], colors.playerColor);
+    colorEntity([players[0]], stylesObj.playerColor);
     player.y -= 1;
     playerCoinCollision(players, coins);
-    colorEntity([players[0]], colors.playerColor);
+    colorEntity([players[0]], stylesObj.playerColor);
     player.lastKeyPressed = "";
   }
   if (player.lastKeyPressed === playerInputs.right) {
     if (players[0].x === gameParams.columns - 1) return;
-    colorEntity([players[0]], colors.playerColor);
+    colorEntity([players[0]], stylesObj.playerColor);
     player.x += 1;
     playerCoinCollision(players, coins);
-    colorEntity([players[0]], colors.playerColor);
+    colorEntity([players[0]], stylesObj.playerColor);
     player.lastKeyPressed = "";
   }
   if (player.lastKeyPressed === playerInputs.down) {
     if (players[0].y === gameParams.rows - 1) return;
-    colorEntity([players[0]], colors.playerColor);
+    colorEntity([players[0]], stylesObj.playerColor);
     player.y += 1;
     playerCoinCollision(players, coins);
-    colorEntity([players[0]], colors.playerColor);
+    colorEntity([players[0]], stylesObj.playerColor);
     player.lastKeyPressed = "";
   }
 }
@@ -316,9 +361,13 @@ document.addEventListener("keydown", () => {
 // Update functions
 function minusLife() {
   gameParams.noLives--;
-  colorEntity(players, colors.playerColor);
+  colorEntity(players, stylesObj.playerColor);
+  grid.classList.toggle(stylesObj.gridBorderSize);
+  grid.classList.toggle(stylesObj.gridBorderColor);
   setTimeout(() => {
-    colorEntity(players, colors.playerColor), 50;
+    colorEntity(players, stylesObj.playerColor), 50;
+    grid.classList.toggle(stylesObj.gridBorderSize);
+    grid.classList.toggle(stylesObj.gridBorderColor);
   });
   livesDisplay.innerHTML = gameParams.noLives.toString();
   if (gameParams.noLives === 0) {
@@ -341,8 +390,8 @@ function minusLife() {
       "transition-all",
       "duration-1000",
       "ease-in",
-      colors.bgColor,
-      colors.gameOverColor
+      stylesObj.bgColor,
+      stylesObj.gameOverTextColor
     );
     const gameOverText = document.createElement("p");
     gameOverText.innerHTML = "GAME OVER";
@@ -388,7 +437,7 @@ function minusLife() {
 }
 
 function moveEnemies(enemies: Enemy[], player: Player) {
-  colorEntity(enemies, colors.enemyColor);
+  colorEntity(enemies, stylesObj.enemyColor);
   for (const enemy of enemies) {
     const [dx, dy] = [player.x - enemy.x, player.y - enemy.y];
     if (Math.round(Math.random()) >= 0.5) continue;
@@ -412,7 +461,7 @@ function moveEnemies(enemies: Enemy[], player: Player) {
   ) {
     minusLife();
   }
-  colorEntity(enemies, colors.enemyColor);
+  colorEntity(enemies, stylesObj.enemyColor);
 }
 
 function updateGameState() {
