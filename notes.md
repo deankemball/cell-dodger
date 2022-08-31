@@ -27,7 +27,7 @@
 ### update functions
 
 - move enemies
-- move players
+<!-- - move players -->
 - collision detection
 - update score
 - check if game over
