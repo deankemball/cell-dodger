@@ -72,7 +72,7 @@ const stylesObj: StylesObj = {
 
 const defaultGameParams: GameParams = {
   noPlayers: 1,
-  noEnemies: 10,
+  noEnemies: 4,
   noCoins: 1,
   noLives: 3,
   gameSpeed: 300,
@@ -125,18 +125,18 @@ helpButton.addEventListener("click", () => {
   instructions.classList.toggle("opacity-0");
 });
 
-// function updateInput(element: HTMLInputElement, gameParam: keyof GameParams) {
-//   element.addEventListener("input", () => {
-//     gameParams[gameParam] = Number(element.value);
-//     console.log(gameParams[gameParam]);
-//     initGame();
-//   });
-// }
+function updateInput(element: HTMLInputElement, gameParam: keyof GameParams) {
+  element.addEventListener("input", () => {
+    gameParams[gameParam] = element.value as never;
+    console.log(gameParams[gameParam]);
+    initGame();
+  });
+}
 
-// updateInput(noLivesInput, "noLives");
-// updateInput(noEnemiesInput, "noEnemies");
-// updateInput(gameSpeedInput, "gameSpeed");
-// updateInput(noCoinsInput, "noCoins");
+updateInput(noLivesInput, "noLives");
+updateInput(noEnemiesInput, "noEnemies");
+updateInput(gameSpeedInput, "gameSpeed");
+updateInput(noCoinsInput, "noCoins");
 
 // style default elements
 body.classList.add(stylesObj.bgColor, stylesObj.textColor);
@@ -233,7 +233,8 @@ function colorEntity<T extends Entity>(entities: T[], color: string) {
 
 // Initialize
 function initGame() {
-  gameParams = cloneDeep(defaultGameParams);
+  gameParams.gameOver = false;
+  gameParams.gameStarted = false;
   players = [];
   coins = [];
   enemies = [];
@@ -270,8 +271,6 @@ function initGame() {
   colorEntity(players, stylesObj.playerColor);
   colorEntity(coins, stylesObj.coinColor);
   colorEntity(enemies, stylesObj.enemyColor);
-
-  console.log("coins", coins, "players", players);
 }
 
 function startGame() {
@@ -406,14 +405,9 @@ function minusLife() {
     grid.appendChild(gameOverScreen);
     const restartButton = document.createElement("button");
     restartButton.addEventListener("click", () => {
+      gameParams.noLives = defaultGameParams.noLives;
       initGame();
       gameLoop();
-      console.log(
-        "gameover",
-        gameParams.gameOver,
-        "gamestarted",
-        gameParams.gameStarted
-      );
     });
     restartButton.innerHTML = "try again?";
     restartButton.classList.add(
