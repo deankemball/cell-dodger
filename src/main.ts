@@ -7,6 +7,7 @@ interface StylesObj {
   playerColor: string;
   coinColor: string;
   enemyColor: string;
+  heartColor: string;
   gridColor: string;
   borderColor: string;
   borderSize: string;
@@ -14,6 +15,7 @@ interface StylesObj {
   gridBorderSize: string;
   minusLifeFlashColor: string;
   plusScoreFlashColor: string;
+  plusLifeFlashColor: string;
 }
 interface GameParams {
   noPlayers: number;
@@ -46,6 +48,9 @@ let enemies: Enemy[] = [];
 interface Coin extends Entity {}
 let coins: Coin[] = [];
 
+interface Heart extends Entity {}
+let hearts: Heart[] = [];
+
 interface PlayerInputs {
   left: string;
   up: string;
@@ -60,6 +65,7 @@ const stylesObj: StylesObj = {
   playerColor: "bg-playerColor",
   coinColor: "bg-coinColor",
   enemyColor: "bg-enemyColor",
+  heartColor: "bg-heartColor",
   gridColor: "bg-gridColor",
   borderColor: "border-black/25",
   borderSize: "border-[1px]",
@@ -67,6 +73,7 @@ const stylesObj: StylesObj = {
   gridBorderSize: "border-2",
   minusLifeFlashColor: "border-playerColor",
   plusScoreFlashColor: "border-coinColor",
+  plusLifeFlashColor: "border-heartColor",
 };
 
 const defaultGameParams: GameParams = {
@@ -298,6 +305,20 @@ function playerCoinCollision(players: Player[], coins: Coin[]) {
     colorEntity(coins, stylesObj.coinColor);
   }
 }
+function playerHeartCollision(players: Player[], coins: Coin[]) {
+  if (
+    hearts.some(({ x, y }) => {
+      return players[0].x === x && players[0].y === y;
+    })
+  ) {
+    gameParams.noLives++;
+    consoleDisplay.innerText = "you gained a life!";
+    livesDisplay.innerText = gameParams.noLives.toString();
+    flashGrid("plusLifeFlashColor");
+    colorEntity(coins, stylesObj.heartColor);
+    hearts.pop();
+  }
+}
 
 document.addEventListener("keydown", (event) => {
   switch (event.key) {
@@ -306,7 +327,6 @@ document.addEventListener("keydown", (event) => {
       break;
     case playerInputs.up:
       players[0].lastKeyPressed = playerInputs.up;
-      playerCoinCollision(players, coins);
       break;
     case playerInputs.right:
       players[0].lastKeyPressed = playerInputs.right;
@@ -323,6 +343,7 @@ function movePlayer(player: Player) {
     colorEntity([players[0]], stylesObj.playerColor);
     player.x -= 1;
     playerCoinCollision(players, coins);
+    playerHeartCollision(players, hearts);
     colorEntity([players[0]], stylesObj.playerColor);
     player.lastKeyPressed = "";
   }
@@ -331,6 +352,7 @@ function movePlayer(player: Player) {
     colorEntity([players[0]], stylesObj.playerColor);
     player.y -= 1;
     playerCoinCollision(players, coins);
+    playerHeartCollision(players, hearts);
     colorEntity([players[0]], stylesObj.playerColor);
     player.lastKeyPressed = "";
   }
@@ -339,6 +361,7 @@ function movePlayer(player: Player) {
     colorEntity([players[0]], stylesObj.playerColor);
     player.x += 1;
     playerCoinCollision(players, coins);
+    playerHeartCollision(players, hearts);
     colorEntity([players[0]], stylesObj.playerColor);
     player.lastKeyPressed = "";
   }
@@ -347,6 +370,7 @@ function movePlayer(player: Player) {
     colorEntity([players[0]], stylesObj.playerColor);
     player.y += 1;
     playerCoinCollision(players, coins);
+    playerHeartCollision(players, hearts);
     colorEntity([players[0]], stylesObj.playerColor);
     player.lastKeyPressed = "";
   }
@@ -373,6 +397,7 @@ function minusLife() {
   livesDisplay.innerHTML = gameParams.noLives.toString();
   if (gameParams.noLives === 0) {
     gameParams.gameOver = true;
+    consoleDisplay.innerText = "you died!";
     const gameOverScreen = document.createElement("div");
     gameOverScreen.classList.add(
       "absolute",
@@ -468,6 +493,12 @@ function moveEnemies(enemies: Enemy[], player: Player) {
 function updateGameState() {
   movePlayer(players[0]);
   moveEnemies(enemies, players[0]);
+  if (hearts.length > 0) {
+    return;
+  } else if (Math.random() < 0.05) {
+    generatePosition(gameParams.rows, gameParams.columns, hearts, 1);
+    colorEntity(hearts, stylesObj.heartColor);
+  }
 }
 
 function gameLoop() {

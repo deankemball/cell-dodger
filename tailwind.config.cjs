@@ -10,6 +10,7 @@ module.exports = {
         coinColor: "#F1D302",
         enemyColor: "#0081A7",
         gridColor: "#292929",
+        heartColor: "#ff69b4",
       },
     },
   },
