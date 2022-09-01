@@ -12,7 +12,8 @@ interface StylesObj {
   borderSize: string;
   gameOverTextColor: string;
   gridBorderSize: string;
-  gridBorderColor: string;
+  minusLifeFlashColor: string;
+  plusScoreFlashColor: string;
 }
 interface GameParams {
   noPlayers: number;
@@ -65,7 +66,8 @@ const stylesObj: StylesObj = {
   borderSize: "border-[1px]",
   gameOverTextColor: "text-playerColor",
   gridBorderSize: "border-2",
-  gridBorderColor: "border-playerColor",
+  minusLifeFlashColor: "border-playerColor",
+  plusScoreFlashColor: "border-coinColor",
 };
 
 const defaultGameParams: GameParams = {
@@ -232,10 +234,6 @@ function colorEntity<T extends Entity>(entities: T[], color: string) {
 // Initialize
 function initGame() {
   gameParams = cloneDeep(defaultGameParams);
-  // gameParams.gameOver = false;
-  // gameParams.gameStarted = false;
-  // gameParams.score = 0;
-  // gameParams.noLives = 3;
   players = [];
   coins = [];
   enemies = [];
@@ -288,6 +286,7 @@ function playerCoinCollision(players: Player[], coins: Coin[]) {
   ) {
     gameParams.score++;
     scoreDisplay.innerHTML = gameParams.score.toString();
+    flashGrid(players, "playerColor", "plusScoreFlashColor");
     colorEntity(coins, stylesObj.coinColor);
     coins.pop();
     generatePosition(
@@ -358,17 +357,25 @@ document.addEventListener("keydown", () => {
   if (!gameParams.gameStarted) startGame();
 });
 
+function flashGrid(
+  entity: Entity[],
+  entityColor: keyof StylesObj,
+  gridFlashColor: keyof StylesObj
+) {
+  colorEntity(entity, stylesObj[entityColor]);
+  grid.classList.toggle(stylesObj.gridBorderSize);
+  grid.classList.toggle(stylesObj[gridFlashColor]);
+  setTimeout(() => {
+    colorEntity(players, stylesObj[entityColor]);
+    grid.classList.toggle(stylesObj.gridBorderSize);
+    grid.classList.toggle(stylesObj[gridFlashColor]);
+  }, 50);
+}
+
 // Update functions
 function minusLife() {
   gameParams.noLives--;
-  colorEntity(players, stylesObj.playerColor);
-  grid.classList.toggle(stylesObj.gridBorderSize);
-  grid.classList.toggle(stylesObj.gridBorderColor);
-  setTimeout(() => {
-    colorEntity(players, stylesObj.playerColor), 50;
-    grid.classList.toggle(stylesObj.gridBorderSize);
-    grid.classList.toggle(stylesObj.gridBorderColor);
-  });
+  flashGrid(players, "playerColor", "minusLifeFlashColor");
   livesDisplay.innerHTML = gameParams.noLives.toString();
   if (gameParams.noLives === 0) {
     gameParams.gameOver = true;
@@ -454,7 +461,7 @@ function moveEnemies(enemies: Enemy[], player: Player) {
       return (
         (player.x === x && player.y === y + 1) ||
         (player.x === x && player.y === y - 1) ||
-        (player.y === y && player.x === x - 1) ||
+        (player.y === y && player.x === x + 1) ||
         (player.y === y && player.x === x - 1)
       );
     })
