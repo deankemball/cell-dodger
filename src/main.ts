@@ -26,7 +26,6 @@ interface GameParams {
   score: number;
   gameStarted: boolean;
   gameOver: boolean;
-  delay: number;
 }
 interface Entity {
   // [{x:1,y:1},{x:2,y:3}]
@@ -75,13 +74,12 @@ const defaultGameParams: GameParams = {
   noEnemies: 4,
   noCoins: 1,
   noLives: 3,
-  gameSpeed: 300,
+  gameSpeed: 200,
   rows: 20,
   columns: 20,
   score: 0,
   gameStarted: false,
   gameOver: false,
-  delay: 300,
 };
 
 let gameParams: GameParams = cloneDeep(defaultGameParams);
@@ -108,6 +106,7 @@ const settingsButton = document.querySelector(
 const helpButton = document.querySelector("#help-icon") as HTMLImageElement;
 const scoreDisplay = document.querySelector("#score") as HTMLElement;
 const livesDisplay = document.querySelector("#lives") as HTMLElement;
+const consoleDisplay = document.querySelector("#console") as HTMLElement;
 
 function toggleIcons(icon: HTMLImageElement, iconName: string) {
   if (!icon.src.includes("filled")) {
@@ -233,6 +232,7 @@ function colorEntity<T extends Entity>(entities: T[], color: string) {
 
 // Initialize
 function initGame() {
+  consoleDisplay.innerText = "";
   gameParams.gameOver = false;
   gameParams.gameStarted = false;
   players = [];
@@ -284,8 +284,9 @@ function playerCoinCollision(players: Player[], coins: Coin[]) {
     })
   ) {
     gameParams.score++;
+    consoleDisplay.innerText = "you found a coin!";
     scoreDisplay.innerHTML = gameParams.score.toString();
-    flashGrid(players, "playerColor", "plusScoreFlashColor");
+    flashGrid("plusScoreFlashColor");
     colorEntity(coins, stylesObj.coinColor);
     coins.pop();
     generatePosition(
@@ -356,25 +357,19 @@ document.addEventListener("keydown", () => {
   if (!gameParams.gameStarted) startGame();
 });
 
-function flashGrid(
-  entity: Entity[],
-  entityColor: keyof StylesObj,
-  gridFlashColor: keyof StylesObj
-) {
-  colorEntity(entity, stylesObj[entityColor]);
+function flashGrid(gridFlashColor: keyof StylesObj) {
   grid.classList.toggle(stylesObj.gridBorderSize);
   grid.classList.toggle(stylesObj[gridFlashColor]);
   setTimeout(() => {
-    colorEntity(players, stylesObj[entityColor]);
     grid.classList.toggle(stylesObj.gridBorderSize);
     grid.classList.toggle(stylesObj[gridFlashColor]);
-  }, 50);
+  }, gameParams.gameSpeed / gameParams.noLives);
 }
 
 // Update functions
 function minusLife() {
   gameParams.noLives--;
-  flashGrid(players, "playerColor", "minusLifeFlashColor");
+  flashGrid("minusLifeFlashColor");
   livesDisplay.innerHTML = gameParams.noLives.toString();
   if (gameParams.noLives === 0) {
     gameParams.gameOver = true;
@@ -460,7 +455,12 @@ function moveEnemies(enemies: Enemy[], player: Player) {
       );
     })
   ) {
-    minusLife();
+    if (Math.round(Math.random()) > 0.7) {
+      consoleDisplay.innerText = "you got hit!";
+      minusLife();
+    } else {
+      consoleDisplay.innerText = "enemy missed!";
+    }
   }
   colorEntity(enemies, stylesObj.enemyColor);
 }
@@ -475,7 +475,7 @@ function gameLoop() {
     if (gameParams.gameStarted) updateGameState();
     setTimeout(() => {
       window.requestAnimationFrame(gameLoop);
-    }, gameParams.delay);
+    }, gameParams.gameSpeed);
   }
 }
 

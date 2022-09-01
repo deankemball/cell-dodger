@@ -21,7 +21,7 @@
             <h2 class="italic font-bold text-2xl">SETTINGS</h2>
             <div class="flex flex-col">
               <div class="flex w-full justify-between">
-                <label class="w-[160px]">No. Lives</label>
+                <label class="w-[160px]">Number of Lives</label>
                 <input
                   id="noLives"
                   class="bg-slate-400 text-right"
@@ -33,7 +33,7 @@
                 />
               </div>
               <div class="flex w-full justify-between">
-                <label class="w-[160px]">No. Enemies</label>
+                <label class="w-[160px]">Number of Enemies</label>
                 <input
                   id="noEnemies"
                   class="bg-slate-400 text-right"
@@ -45,7 +45,7 @@
                 />
               </div>
               <div class="flex w-full justify-between">
-                <label class="w-[160px] self-start">No. Coins</label>
+                <label class="w-[160px] self-start">Number of Coins</label>
                 <input
                   id="noCoins"
                   class="bg-slate-400 text-right"
@@ -64,7 +64,7 @@
                   type="number"
                   placeholder="300"
                   value="300"
-                  min="100"
+                  min="50"
                   max="600"
                   step="50"
                 />
@@ -92,11 +92,16 @@
             class="relative grid align-items-center w-[600px] h-[600px] bg-gridColor grid-rows-[repeat(20,1fr)] grid-cols-[repeat(20,1fr)]"
           ></div>
           <div id="ui-bottom" class="flex w-full justify-between">
-            <p class="italic font-bold text-xl w-1/2">
+            <p class="italic font-bold text-xl">
               SCORE: <span id="score">0</span>
             </p>
-            <div class="flex justify-end w-1/2 gap-2">
-              <p class="italic font-bold text-xl w-1/2 text-right">
+            <div class="flex gap-2">
+              <p class="font-mono font-thin text-lg tracking-wide text-center">
+                <span id="console"></span>
+              </p>
+            </div>
+            <div class="flex gap-2">
+              <p class="italic font-bold text-xl text-right">
                 LIVES: <span id="lives">3</span>
               </p>
             </div>
