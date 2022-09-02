@@ -115,19 +115,26 @@ const scoreDisplay = document.querySelector("#score") as HTMLElement;
 const livesDisplay = document.querySelector("#lives") as HTMLElement;
 const consoleDisplay = document.querySelector("#console") as HTMLElement;
 
-function toggleIcons(icon: HTMLImageElement, iconName: string) {
+function toggleHelpIcon(icon: HTMLImageElement, iconName: string) {
   if (!icon.src.includes("filled")) {
-    icon.src = `./${iconName}-filled.svg`;
+    icon.src = `./${iconName}-filled.8077b526.svg`;
   } else {
-    icon.src = `/${iconName}.svg`;
+    icon.src = `/${iconName}.5879900d.svg`;
+  }
+}
+function toggleSettingsIcon(icon: HTMLImageElement, iconName: string) {
+  if (!icon.src.includes("filled")) {
+    icon.src = `./${iconName}-filled.0b67e235.svg`;
+  } else {
+    icon.src = `/${iconName}.aaf9c6ec.svg`;
   }
 }
 settingsButton.addEventListener("click", () => {
-  toggleIcons(settingsButton, "settings");
+  toggleSettingsIcon(settingsButton, "settings");
   settings.classList.toggle("opacity-0");
 });
 helpButton.addEventListener("click", () => {
-  toggleIcons(helpButton, "help");
+  toggleHelpIcon(helpButton, "help");
   instructions.classList.toggle("opacity-0");
 });
 
@@ -239,19 +246,17 @@ function colorEntity<T extends Entity>(entities: T[], color: string) {
 
 // Initialize
 function initGame() {
-  consoleDisplay.innerText = "";
+  gameParams.score = 0;
   gameParams.gameOver = false;
   gameParams.gameStarted = false;
+  gameParams.noLives = Number(noLivesInput.value);
+  livesDisplay.innerHTML = gameParams.noLives.toString();
+  scoreDisplay.innerHTML = gameParams.score.toString();
+  consoleDisplay.innerText = "";
+
   players = [];
   coins = [];
   enemies = [];
-  noEnemiesInput.value = gameParams.noEnemies.toString();
-  noCoinsInput.value = gameParams.noCoins.toString();
-  noLivesInput.value = gameParams.noLives.toString();
-  gameSpeedInput.value = gameParams.gameSpeed.toString();
-
-  livesDisplay.innerHTML = gameParams.noLives.toString();
-  scoreDisplay.innerHTML = gameParams.score.toString();
 
   removeChildren(grid);
   generateGrid(gameParams.rows, gameParams.columns);
@@ -425,7 +430,6 @@ function minusLife() {
     grid.appendChild(gameOverScreen);
     const restartButton = document.createElement("button");
     restartButton.addEventListener("click", () => {
-      gameParams.noLives = defaultGameParams.noLives;
       initGame();
       gameLoop();
     });
