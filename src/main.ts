@@ -226,40 +226,52 @@ function createJoystick() {
       pos4 = 0;
     if (document.getElementById(element.id)) {
       // if present, the header is where you move the DIV from:
-      document.getElementById(element.id)!.onmousedown = dragMouseDown;
+      document.getElementById(element.id)!.ontouchstart = dragMouseDown;
     } else {
       // otherwise, move the DIV from anywhere inside the DIV:
-      element.onmousedown = dragMouseDown;
+      element.ontouchstart = dragMouseDown;
     }
 
     function dragMouseDown(e: any) {
       e = e || window.event;
       e.preventDefault();
-      // get the mouse cursor position at startup:
-      pos3 = e.clientX;
-      pos4 = e.clientY;
-      document.onmouseup = closeDragElement;
-      // call a function whenever the cursor moves:
-      document.onmousemove = elementDrag;
+
+      var evt = typeof e.originalEvent === "undefined" ? e : e.originalEvent;
+      var touch = evt.touches[0] || evt.changedTouches[0];
+
+      // // get the initial touch position:
+      pos3 = touch.pageX;
+      pos4 = touch.pageY;
+      document.ontouchend = closeDragElement;
+
+      // call a function whenever the touch drags:
+      document.ontouchmove = elementDrag;
     }
 
     function elementDrag(e: any) {
       e = e || window.event;
       e.preventDefault();
-      // calculate the new cursor position:
-      pos1 = pos3 - e.clientX;
-      pos2 = pos4 - e.clientY;
-      pos3 = e.clientX;
-      pos4 = e.clientY;
+      var evt = typeof e.originalEvent === "undefined" ? e : e.originalEvent;
+      var touch = evt.touches[0] || evt.changedTouches[0];
+
+      // calculate the new touch position:
+      pos1 = pos3 - touch.pageX;
+      pos2 = pos4 - touch.pageY;
+      pos3 = touch.pageX;
+      pos4 = touch.pageY;
       // set the element's new position:
+
       element.style.top = clamp(element.offsetTop - pos2, -16, 32) + "px";
       element.style.left = clamp(element.offsetLeft - pos1, -16, 32) + "px";
     }
 
     function closeDragElement() {
-      // stop moving when mouse button is released:
-      document.onmouseup = null;
-      document.onmousemove = () => {
+      // stop moving when touch event ends:
+      document.ontouchend = () => {
+        element.style.top = 8 + "px";
+        element.style.left = 8 + "px";
+      };
+      document.ontouchcancel = () => {
         element.style.top = 8 + "px";
         element.style.left = 8 + "px";
       };
