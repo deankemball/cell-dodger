@@ -101,6 +101,10 @@ let playerInputs: PlayerInputs = {
 // Add Event Listeners
 const body = document.querySelector("body") as HTMLElement;
 const grid = document.querySelector("#grid-container") as HTMLElement;
+const settingsColumn = document.querySelector("#settings") as HTMLElement;
+const instructionsColumn = document.querySelector(
+  "#instructions"
+) as HTMLElement;
 const settings = document.querySelector("#settings-box") as HTMLElement;
 const instructions = document.querySelector("#instructions-box") as HTMLElement;
 const noLivesInput = document.querySelector("#noLives") as HTMLInputElement;
@@ -129,13 +133,47 @@ function toggleSettingsIcon(icon: HTMLImageElement, iconName: string) {
     icon.src = `./assets/${iconName}.aaf9c6ec.svg`;
   }
 }
+
 settingsButton.addEventListener("click", () => {
-  toggleSettingsIcon(settingsButton, "settings");
-  settings.classList.toggle("opacity-0");
+  let screenSize = window.innerWidth;
+  if (screenSize <= 1024) {
+    if (!instructionsColumn.classList.contains("opacity-0")) {
+      settingsColumn.classList.add("order-2");
+      instructionsColumn.classList.remove("order-2");
+      instructionsColumn.classList.add("order-3");
+      instructionsColumn.classList.toggle("opacity-0");
+      toggleHelpIcon(helpButton, "help");
+    }
+    toggleSettingsIcon(settingsButton, "settings");
+    settingsColumn.classList.add("order-2");
+    instructionsColumn.classList.remove("order-2");
+    instructionsColumn.classList.add("order-3");
+    settingsColumn.classList.toggle("opacity-0");
+  } else {
+    toggleSettingsIcon(settingsButton, "settings");
+    settingsColumn.classList.toggle("opacity-0");
+  }
 });
+
 helpButton.addEventListener("click", () => {
-  toggleHelpIcon(helpButton, "help");
-  instructions.classList.toggle("opacity-0");
+  let screenSize = window.innerWidth;
+  if (screenSize <= 1024) {
+    if (!settingsColumn.classList.contains("opacity-0")) {
+      instructionsColumn.classList.add("order-2");
+      settingsColumn.classList.remove("order-2");
+      settingsColumn.classList.add("order-3");
+      settingsColumn.classList.toggle("opacity-0");
+      toggleSettingsIcon(settingsButton, "settings");
+    }
+    toggleHelpIcon(helpButton, "help");
+    instructionsColumn.classList.add("order-2");
+    settingsColumn.classList.remove("order-2");
+    settingsColumn.classList.add("order-3");
+    instructionsColumn.classList.toggle("opacity-0");
+  } else {
+    toggleHelpIcon(helpButton, "help");
+    instructionsColumn.classList.toggle("opacity-0");
+  }
 });
 
 function updateInput(element: HTMLInputElement, gameParam: keyof GameParams) {
@@ -414,6 +452,7 @@ function minusLife() {
       "bottom-0",
       "justify-center",
       "items-center",
+      "text-5xl",
       "text-7xl",
       "font-bold",
       "italic",
@@ -436,8 +475,10 @@ function minusLife() {
     restartButton.innerHTML = "try again?";
     restartButton.classList.add(
       "mt-8",
+      "md:mt-8",
       "px-4",
       "py-2",
+      "text-xs",
       "text-base",
       "font-regular",
       "tracking-wide",
