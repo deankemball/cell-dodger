@@ -409,7 +409,9 @@ function colorEntity<T extends Entity>(entities: T[], color: string) {
 // Initialize
 function initGame() {
   if (window.innerWidth < 1024) {
-    createJoystick();
+    if (!document.getElementById("jsGrabber")) {
+      createJoystick();
+    }
     controlsSVG.classList.add("hidden");
     touchControlsSVG.classList.remove("hidden");
     controlsInstructions.innerText = "Use the joystick to move the";
