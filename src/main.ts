@@ -226,10 +226,10 @@ function createJoystick() {
       pos4 = 0;
     if (document.getElementById(element.id)) {
       // if present, the header is where you move the DIV from:
-      document.getElementById(element.id)!.onmousedown = dragMouseDown;
+      document.getElementById(element.id)!.ontouchstart = dragMouseDown;
     } else {
       // otherwise, move the DIV from anywhere inside the DIV:
-      element.onmousedown = dragMouseDown;
+      element.ontouchstart = dragMouseDown;
     }
 
     function dragMouseDown(e: any) {
@@ -238,9 +238,9 @@ function createJoystick() {
       // get the mouse cursor position at startup:
       pos3 = e.clientX;
       pos4 = e.clientY;
-      document.onmouseup = closeDragElement;
+      document.ontouchend = closeDragElement;
       // call a function whenever the cursor moves:
-      document.onmousemove = elementDrag;
+      document.ontouchmove = elementDrag;
     }
 
     function elementDrag(e: any) {
@@ -258,8 +258,7 @@ function createJoystick() {
 
     function closeDragElement() {
       // stop moving when mouse button is released:
-      document.onmouseup = null;
-      document.onmousemove = () => {
+      document.ontouchend = () => {
         element.style.top = 8 + "px";
         element.style.left = 8 + "px";
       };
