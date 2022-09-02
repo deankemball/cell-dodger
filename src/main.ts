@@ -1,4 +1,4 @@
-import { cloneDeep } from "lodash";
+import { cloneDeep, clamp } from "lodash";
 
 // Define Types
 interface StylesObj {
@@ -102,6 +102,7 @@ let playerInputs: PlayerInputs = {
 const body = document.querySelector("body") as HTMLElement;
 const grid = document.querySelector("#grid-container") as HTMLElement;
 const settingsColumn = document.querySelector("#settings") as HTMLElement;
+const centerColumn = document.querySelector("#center") as HTMLElement;
 const instructionsColumn = document.querySelector(
   "#instructions"
 ) as HTMLElement;
@@ -175,6 +176,94 @@ helpButton.addEventListener("click", () => {
     instructionsColumn.classList.toggle("opacity-0");
   }
 });
+
+function createJoystick() {
+  const joystickContainer = document.createElement("div");
+  joystickContainer.id = "jsFixed";
+  joystickContainer.classList.add(
+    "w-24",
+    "h-24",
+    "rounded-full",
+    "absolute",
+    "bottom-[calc(((100vh-100vw)/2)-48px-24px)]",
+    "left-[calc(50vw-48px)]",
+    "z-0"
+  );
+  const joystickContainer2 = document.createElement("div");
+  joystickContainer2.id = "jsContainer";
+  joystickContainer2.classList.add(
+    "w-full",
+    "h-full",
+    "rounded-full",
+    "bg-gridColor",
+    "relative",
+    "flex",
+    "justify-center",
+    "items-center"
+  );
+  const joystick = document.createElement("div");
+  joystick.id = "jsGrabber";
+  joystick.classList.add(
+    "w-20",
+    "h-20",
+    "rounded-full",
+    "bg-textColor",
+    "z-1",
+    "absolute"
+  );
+  joystickContainer.appendChild(joystickContainer2);
+  joystickContainer2.appendChild(joystick);
+  centerColumn.appendChild(joystickContainer);
+
+  dragElement(document.getElementById("jsGrabber") as HTMLElement);
+
+  function dragElement(element: HTMLElement) {
+    var pos1 = 0,
+      pos2 = 0,
+      pos3 = 0,
+      pos4 = 0;
+    if (document.getElementById(element.id)) {
+      // if present, the header is where you move the DIV from:
+      document.getElementById(element.id)!.onmousedown = dragMouseDown;
+    } else {
+      // otherwise, move the DIV from anywhere inside the DIV:
+      element.onmousedown = dragMouseDown;
+    }
+
+    function dragMouseDown(e: any) {
+      e = e || window.event;
+      e.preventDefault();
+      // get the mouse cursor position at startup:
+      pos3 = e.clientX;
+      pos4 = e.clientY;
+      document.onmouseup = closeDragElement;
+      // call a function whenever the cursor moves:
+      document.onmousemove = elementDrag;
+    }
+
+    function elementDrag(e: any) {
+      e = e || window.event;
+      e.preventDefault();
+      // calculate the new cursor position:
+      pos1 = pos3 - e.clientX;
+      pos2 = pos4 - e.clientY;
+      pos3 = e.clientX;
+      pos4 = e.clientY;
+      // set the element's new position:
+      element.style.top = clamp(element.offsetTop - pos2, -16, 32) + "px";
+      element.style.left = clamp(element.offsetLeft - pos1, -16, 32) + "px";
+    }
+
+    function closeDragElement() {
+      // stop moving when mouse button is released:
+      document.onmouseup = null;
+      document.onmousemove = () => {
+        element.style.top = 8 + "px";
+        element.style.left = 8 + "px";
+      };
+    }
+  }
+}
 
 function updateInput(element: HTMLInputElement, gameParam: keyof GameParams) {
   element.addEventListener("input", () => {
@@ -284,6 +373,9 @@ function colorEntity<T extends Entity>(entities: T[], color: string) {
 
 // Initialize
 function initGame() {
+  if (window.innerWidth < 1024) {
+    createJoystick();
+  }
   gameParams.score = 0;
   gameParams.gameOver = false;
   gameParams.gameStarted = false;
