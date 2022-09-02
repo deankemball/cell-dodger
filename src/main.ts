@@ -273,15 +273,19 @@ function createJoystick() {
       let clampedY = clamp(element.offsetTop - pos2, -16, 32);
       element.style.top = clampedY + "px";
       element.style.left = clampedX + "px";
-      console.log("x", clampedX, "y", clampedY);
+      // normalize values to be mapped to player inputs
+      let normalizedX = normalizeValue(clampedX, -16, 32);
+      let normalizedY = normalizeValue(clampedY, -16, 32);
 
-      if (clampedX < clampedY && Math.sign(clampedX) < 0) {
+      console.log("x", normalizedX, "y", normalizedY);
+
+      if (normalizedX === -1) {
         players[0].lastKeyPressed = playerInputs.left;
-      } else if (clampedX > clampedY && Math.sign(clampedX) > 0) {
+      } else if (normalizedX === 1) {
         players[0].lastKeyPressed = playerInputs.right;
-      } else if (clampedY < clampedX && Math.sign(clampedY) < 0) {
+      } else if (normalizedY === -1) {
         players[0].lastKeyPressed = playerInputs.up;
-      } else if (clampedY > clampedX && Math.sign(clampedY) > 0) {
+      } else if (normalizedY === 1) {
         players[0].lastKeyPressed = playerInputs.down;
       }
     }
@@ -349,6 +353,9 @@ function removeChildren(element: HTMLElement) {
 }
 function mod(n: number, m: number) {
   return ((n % m) + m) % m;
+}
+function normalizeValue(val: number, min: number, max: number) {
+  return Math.round(((val - min) / (max - min)) * 2) - 1;
 }
 // Start Functions
 function generateGrid(rows: number, columns: number) {
