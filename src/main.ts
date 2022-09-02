@@ -147,6 +147,7 @@ settingsButton.addEventListener("click", () => {
     }
     toggleSettingsIcon(settingsButton, "settings");
     settingsColumn.classList.add("order-2");
+    settingsColumn.classList.remove("order-3");
     instructionsColumn.classList.remove("order-2");
     instructionsColumn.classList.add("order-3");
     settingsColumn.classList.toggle("opacity-0");
@@ -168,6 +169,7 @@ helpButton.addEventListener("click", () => {
     }
     toggleHelpIcon(helpButton, "help");
     instructionsColumn.classList.add("order-2");
+    instructionsColumn.classList.remove("order-3");
     settingsColumn.classList.remove("order-2");
     settingsColumn.classList.add("order-3");
     instructionsColumn.classList.toggle("opacity-0");
