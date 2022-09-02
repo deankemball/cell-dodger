@@ -119,14 +119,14 @@ function toggleHelpIcon(icon: HTMLImageElement, iconName: string) {
   if (!icon.src.includes("filled")) {
     icon.src = `./${iconName}-filled.8077b526.svg`;
   } else {
-    icon.src = `/${iconName}.5879900d.svg`;
+    icon.src = `./${iconName}.5879900d.svg`;
   }
 }
 function toggleSettingsIcon(icon: HTMLImageElement, iconName: string) {
   if (!icon.src.includes("filled")) {
     icon.src = `./${iconName}-filled.0b67e235.svg`;
   } else {
-    icon.src = `/${iconName}.aaf9c6ec.svg`;
+    icon.src = `./${iconName}.aaf9c6ec.svg`;
   }
 }
 settingsButton.addEventListener("click", () => {
