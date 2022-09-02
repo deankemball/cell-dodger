@@ -119,6 +119,13 @@ const helpButton = document.querySelector("#help-icon") as HTMLImageElement;
 const scoreDisplay = document.querySelector("#score") as HTMLElement;
 const livesDisplay = document.querySelector("#lives") as HTMLElement;
 const consoleDisplay = document.querySelector("#console") as HTMLElement;
+const controlsSVG = document.querySelector("#controlsSVG") as HTMLElement;
+const touchControlsSVG = document.querySelector(
+  "#touchControlsSVG"
+) as HTMLElement;
+const controlsInstructions = document.querySelector(
+  "#controlsInstructions"
+) as HTMLElement;
 
 function toggleHelpIcon(icon: HTMLImageElement, iconName: string) {
   if (!icon.src.includes("filled")) {
@@ -235,9 +242,9 @@ function createJoystick() {
     }
 
     function dragMouseDown(e: any) {
-      e = e || window.event;
-      e.preventDefault();
-
+      // e = e || window.event;
+      // e.preventDefault();
+      gameParams.gameStarted = true;
       var evt = typeof e.originalEvent === "undefined" ? e : e.originalEvent;
       var touch = evt.touches[0] || evt.changedTouches[0];
 
@@ -251,8 +258,8 @@ function createJoystick() {
     }
 
     function elementDrag(e: any) {
-      e = e || window.event;
-      e.preventDefault();
+      // e = e || window.event;
+      // e.preventDefault();
       var evt = typeof e.originalEvent === "undefined" ? e : e.originalEvent;
       var touch = evt.touches[0] || evt.changedTouches[0];
 
@@ -262,9 +269,21 @@ function createJoystick() {
       pos3 = touch.pageX;
       pos4 = touch.pageY;
       // set the element's new position:
+      let clampedX = clamp(element.offsetLeft - pos1, -16, 32);
+      let clampedY = clamp(element.offsetTop - pos2, -16, 32);
+      element.style.top = clampedY + "px";
+      element.style.left = clampedX + "px";
+      console.log("x", clampedX, "y", clampedY);
 
-      element.style.top = clamp(element.offsetTop - pos2, -16, 32) + "px";
-      element.style.left = clamp(element.offsetLeft - pos1, -16, 32) + "px";
+      if (clampedX < clampedY && Math.sign(clampedX) < 0) {
+        players[0].lastKeyPressed = playerInputs.left;
+      } else if (clampedX > clampedY && Math.sign(clampedX) > 0) {
+        players[0].lastKeyPressed = playerInputs.right;
+      } else if (clampedY < clampedX && Math.sign(clampedY) < 0) {
+        players[0].lastKeyPressed = playerInputs.up;
+      } else if (clampedY > clampedX && Math.sign(clampedY) > 0) {
+        players[0].lastKeyPressed = playerInputs.down;
+      }
     }
 
     function closeDragElement() {
@@ -391,6 +410,13 @@ function colorEntity<T extends Entity>(entities: T[], color: string) {
 function initGame() {
   if (window.innerWidth < 1024) {
     createJoystick();
+    controlsSVG.classList.add("hidden");
+    touchControlsSVG.classList.remove("hidden");
+    controlsInstructions.innerText = "Use the joystick to move the";
+  } else if (window.innerWidth < 1024) {
+    controlsSVG.classList.remove("hidden");
+    touchControlsSVG.classList.add("hidden");
+    controlsInstructions.innerText = "Use the arrow keys to move the";
   }
   gameParams.score = 0;
   gameParams.gameOver = false;
@@ -489,40 +515,35 @@ document.addEventListener("keydown", (event) => {
 });
 
 function movePlayer(player: Player) {
+  let mobileDevice = window.innerWidth < 1024;
+
   if (player.lastKeyPressed === playerInputs.left) {
     if (players[0].x === 0) return;
     colorEntity([players[0]], stylesObj.playerColor);
     player.x -= 1;
-    playerCoinCollision(players, coins);
-    playerHeartCollision(players, hearts);
     colorEntity([players[0]], stylesObj.playerColor);
-    player.lastKeyPressed = "";
   }
   if (player.lastKeyPressed === playerInputs.up) {
     if (players[0].y === 0) return;
     colorEntity([players[0]], stylesObj.playerColor);
     player.y -= 1;
-    playerCoinCollision(players, coins);
-    playerHeartCollision(players, hearts);
     colorEntity([players[0]], stylesObj.playerColor);
-    player.lastKeyPressed = "";
   }
   if (player.lastKeyPressed === playerInputs.right) {
     if (players[0].x === gameParams.columns - 1) return;
     colorEntity([players[0]], stylesObj.playerColor);
     player.x += 1;
-    playerCoinCollision(players, coins);
-    playerHeartCollision(players, hearts);
     colorEntity([players[0]], stylesObj.playerColor);
-    player.lastKeyPressed = "";
   }
   if (player.lastKeyPressed === playerInputs.down) {
     if (players[0].y === gameParams.rows - 1) return;
     colorEntity([players[0]], stylesObj.playerColor);
     player.y += 1;
-    playerCoinCollision(players, coins);
-    playerHeartCollision(players, hearts);
     colorEntity([players[0]], stylesObj.playerColor);
+  }
+  playerCoinCollision(players, coins);
+  playerHeartCollision(players, hearts);
+  if (!mobileDevice) {
     player.lastKeyPressed = "";
   }
 }
@@ -561,7 +582,7 @@ function minusLife() {
       "justify-center",
       "items-center",
       "text-5xl",
-      "text-7xl",
+      "md:text-7xl",
       "font-bold",
       "italic",
       "opacity-0",

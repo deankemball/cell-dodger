@@ -133,9 +133,16 @@
           <div class="flex flex-col w-full items-center px-6 py-4 gap-2">
             <h2 class="italic font-bold text-2xl">INSTRUCTIONS</h2>
             <div class="flex w-full justify-center gap-4">
-              <img class="w-24" src="./controls.svg" />
+              <img id="controlsSVG" class="w-24" src="./controls.svg" />
+              <img
+                id="touchControlsSVG"
+                class="w-24 hidden"
+                src="./touchcontrols.svg"
+              />
               <p class="leading-tight">
-                Use the arrow keys to move the
+                <span id="controlsInstructions">
+                  Use the arrow keys to move the</span
+                >
                 <span class="text-playerColor font-bold">player</span>. Collect
                 <span class="text-coinColor font-bold">coins</span> and
                 <span class="text-heartColor font-bold">hearts</span>
