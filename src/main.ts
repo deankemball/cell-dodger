@@ -233,7 +233,9 @@ function createJoystick() {
     }
 
     function dragMouseDown(e: any) {
-      e = e || window.event;
+      var touch =
+        e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+      e = touch || window.event;
       e.preventDefault();
       // get the mouse cursor position at startup:
       pos3 = e.clientX;
@@ -244,7 +246,9 @@ function createJoystick() {
     }
 
     function elementDrag(e: any) {
-      e = e || window.event;
+      var touch =
+        e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+      e = touch || window.event;
       e.preventDefault();
       // calculate the new cursor position:
       pos1 = pos3 - e.clientX;
