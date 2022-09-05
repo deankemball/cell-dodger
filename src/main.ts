@@ -268,16 +268,57 @@ function createJoystick() {
       pos2 = pos4 - touch.pageY;
       pos3 = touch.pageX;
       pos4 = touch.pageY;
+
+      // try to limit it to a circular shape
+      let canvasInfo = {
+        l: joystickContainer2.offsetLeft,
+        t: joystickContainer2.offsetTop,
+        w: joystickContainer2.offsetWidth,
+        h: joystickContainer2.offsetHeight,
+        r: joystickContainer2.offsetWidth / 2,
+      };
+      console.log(canvasInfo.r);
+
       // set the element's new position:
       let clampedX = clamp(element.offsetLeft - pos1, -16, 32);
       let clampedY = clamp(element.offsetTop - pos2, -16, 32);
-      element.style.top = clampedY + "px";
-      element.style.left = clampedX + "px";
       // normalize values to be mapped to player inputs
       let normalizedX = normalizeValue(clampedX, -16, 32);
       let normalizedY = normalizeValue(clampedY, -16, 32);
+      console.log("clamped", clampedX, clampedY);
+      console.log("normaled", normalizedX, normalizedY);
 
-      console.log("x", normalizedX, "y", normalizedY);
+      let canvasCenter = [8, 8];
+
+      function distance(dot1: number[], dot2: number[]) {
+        var x1 = dot1[0],
+          y1 = dot1[1],
+          x2 = dot2[0],
+          y2 = dot2[1];
+        return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+      }
+
+      function limit(x: number, y: number, canvasCenter: number[]) {
+        var dist = distance([x, y], canvasCenter);
+        console.log("dist", dist);
+        if (dist <= canvasInfo.r) {
+          return { x: x, y: y };
+        } else {
+          x = x - canvasCenter[0];
+          y = y - canvasCenter[1];
+          var radians = Math.atan2(x, y);
+          return {
+            x: Math.cos(radians) * canvasInfo.r + canvasCenter[0],
+            y: Math.sin(radians) * canvasInfo.r + canvasCenter[1],
+          };
+        }
+      }
+
+      var result = limit(clampedX, clampedY, canvasCenter);
+
+      console.log("result", result);
+      element.style.top = result.y + "px";
+      element.style.left = result.x + "px";
 
       if (normalizedX === -1) {
         players[0].lastKeyPressed = playerInputs.left;
@@ -355,7 +396,7 @@ function mod(n: number, m: number) {
   return ((n % m) + m) % m;
 }
 function normalizeValue(val: number, min: number, max: number) {
-  return Math.round(((val - min) / (max - min)) * 2) - 1;
+  return ((val - min) / (max - min)) * 2 - 1;
 }
 // Start Functions
 function generateGrid(rows: number, columns: number) {
