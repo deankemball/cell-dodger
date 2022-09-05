@@ -251,13 +251,14 @@ function createJoystick() {
       // // get the initial touch position:
       pos3 = touch.pageX;
       pos4 = touch.pageY;
-      document.ontouchend = closeDragElement;
+      element.ontouchend = closeDragElement;
 
       // call a function whenever the touch drags:
-      document.ontouchmove = elementDrag;
+      element.ontouchmove = elementDrag;
     }
 
     function elementDrag(e: any) {
+      joystick.classList.remove("transition-all");
       // e = e || window.event;
       // e.preventDefault();
       var evt = typeof e.originalEvent === "undefined" ? e : e.originalEvent;
@@ -332,15 +333,16 @@ function createJoystick() {
     }
 
     function closeDragElement() {
+      element.classList.add("transition-all");
       // stop moving when touch event ends:
       document.ontouchend = () => {
         element.style.top = 8 + "px";
         element.style.left = 8 + "px";
       };
-      document.ontouchcancel = () => {
-        element.style.top = 8 + "px";
-        element.style.left = 8 + "px";
-      };
+      // document.ontouchcancel = () => {
+      //   element.style.top = 8 + "px";
+      //   element.style.left = 8 + "px";
+      // };
     }
   }
 }
