@@ -412,7 +412,7 @@ function generateGrid(rows: number, columns: number) {
     for (let row = 0; row < rows; row++) {
       const gridCell = document.createElement("div");
       gridCell.id = `xy_${row}-${column}`;
-      gridCell.classList.add("border-[1px]", "border-black/25");
+      gridCell.classList.add("border-[1px]", "border-gridColor");
       grid.appendChild(gridCell);
     }
   }
