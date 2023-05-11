@@ -137,7 +137,6 @@ function toggleHelpIcon(icon: HTMLImageElement, iconName: string) {
 function toggleSettingsIcon(icon: HTMLImageElement, iconName: string) {
   if (!icon.src.includes("filled")) {
     icon.src = `./assets/${iconName}-filled.0b67e235.svg`;
-  } else {
     icon.src = `./assets/${iconName}.aaf9c6ec.svg`;
   }
 }
@@ -145,6 +144,14 @@ function toggleSettingsIcon(icon: HTMLImageElement, iconName: string) {
 settingsButton.addEventListener("click", () => {
   let screenSize = window.innerWidth;
   if (screenSize <= 1024) {
+    if (
+      instructionsColumn.classList.contains("opacity-0") &&
+      settingsColumn.classList.contains("opacity-0")
+    ) {
+      document.getElementById("jsContainer")?.classList.add("opacity-0");
+    } else {
+      document.getElementById("jsContainer")?.classList.remove("opacity-0");
+    }
     if (!instructionsColumn.classList.contains("opacity-0")) {
       settingsColumn.classList.add("order-2");
       instructionsColumn.classList.remove("order-2");
@@ -168,6 +175,14 @@ settingsButton.addEventListener("click", () => {
 helpButton.addEventListener("click", () => {
   let screenSize = window.innerWidth;
   if (screenSize <= 1024) {
+    if (
+      instructionsColumn.classList.contains("opacity-0") &&
+      settingsColumn.classList.contains("opacity-0")
+    ) {
+      document.getElementById("jsContainer")?.classList.add("opacity-0");
+    } else {
+      document.getElementById("jsContainer")?.classList.remove("opacity-0");
+    }
     if (!settingsColumn.classList.contains("opacity-0")) {
       instructionsColumn.classList.add("order-2");
       settingsColumn.classList.remove("order-2");
@@ -210,7 +225,8 @@ function createJoystick() {
     "relative",
     "flex",
     "justify-center",
-    "items-center"
+    "items-center",
+    "transition-all"
   );
   const joystick = document.createElement("div");
   joystick.id = "jsGrabber";
@@ -412,7 +428,7 @@ function generateGrid(rows: number, columns: number) {
     for (let row = 0; row < rows; row++) {
       const gridCell = document.createElement("div");
       gridCell.id = `xy_${row}-${column}`;
-      gridCell.classList.add("border-[1px]", "border-gridColor");
+      gridCell.classList.add("border-[1px]", stylesObj.borderColor);
       grid.appendChild(gridCell);
     }
   }
